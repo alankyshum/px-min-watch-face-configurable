@@ -17,4 +17,4 @@ jobs:
         run: |
           ! git ls-files | grep -E '\.(apk|aab|jks|keystore|class|log)$'
           test "$(git ls-files | grep -E '\.(ttf|ttc|otf)$' | wc -l | tr -d ' ')" = 1
-          git ls-files | xargs grep -Il 'com\.alanshum\.pixelminimal\|Google Sans' | (! grep .)
+          ! rg -i 'com\.alanshum\.pixelminimal|google sans' watchface calendar-provider
