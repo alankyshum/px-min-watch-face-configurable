@@ -1,0 +1,20 @@
+name: verify
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.x' }
+      - run: python3 tools/config_inventory.py --check
+      - run: python3 -m unittest tools/test_config_inventory.py
+      - run: python3 -c "import pathlib, xml.etree.ElementTree as e; [e.parse(p) for p in pathlib.Path('.').rglob('*.xml')]"
+      - run: ./gradlew test lint assembleDebug
+      - name: provenance
+        run: |
+          ! git ls-files | grep -E '\.(apk|aab|jks|keystore|class|log)$'
+          test "$(git ls-files | grep -E '\.(ttf|ttc|otf)$' | wc -l | tr -d ' ')" = 1
+          git ls-files | xargs grep -Il 'com\.alanshum\.pixelminimal\|Google Sans' | (! grep .)

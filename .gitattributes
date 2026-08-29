@@ -1,0 +1,3 @@
+# Preserve third-party text verbatim and normalize the generated Gradle Windows launcher.
+OFL.txt -text whitespace=-trailing-space
+gradlew.bat text eol=crlf

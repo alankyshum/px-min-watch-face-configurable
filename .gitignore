@@ -1,0 +1,14 @@
+.gradle/
+**/build/
+local.properties
+*.apk
+*.aab
+*.keystore
+*.jks
+*.log
+__pycache__/
+*.py[cod]
+device-logs/
+evidence/
+*.png
+!docs/assets/*.png
