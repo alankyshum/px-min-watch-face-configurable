@@ -8,11 +8,11 @@ An original resource-only Wear OS Watch Face Format (WFF) v2 face for API 34, pl
 
 ## OnePlus / OHealth setup and editing
 
-On the watch, open the watch-face picker, choose **Add**, then choose **Configurable Minimal**. This is the verified discovery path for the public WFF2 package.
+On the watch, long-press the active face and choose **Customize**, or open the watch-face picker, choose **Add**, then choose **Configurable Minimal**. These are the verified editing and discovery paths for the public WFF2 package.
 
 On the tested OnePlus/OHealth pairing, the OHealth phone companion does **not** remotely edit third-party standard WFF2 schemas; its phone-side editor is for proprietary OEM faces. Configure this face from the watch-side, platform-managed watch-face controls instead. The verified active package is `dev.alanshum.configurableminimal`, hosted by `com.google.wear.watchface.runtime/.DeclarativeWatchFaceRuntime0` as instance `wfId-66`.
 
-The runtime loaded these six setting IDs: `clockColor`, `accentColor`, `aodStyle`, `seconds`, `topTextSize`, and `bottomTextSize`; and these four slots: Day & Date (left), Calendar progress (right), Top text, and Bottom text. The face uses an Orbitron clock; the left side is text-only Day & Date; the right side is a calendar-progress ring; and the top/bottom regions accept text complications. Seconds are suppressed in always-on display (AOD).
+Hands-on verification exercised and confirmed persistence for all six settings—`clockColor`, `accentColor`, `aodStyle`, `seconds`, `topTextSize`, and `bottomTextSize`—and all four flavors. The four verified slots are Day & Date (left), Calendar progress (right), Top text, and Bottom text. The face uses an Orbitron clock; the left side is text-only Day & Date; the right side is a calendar-progress ring; and the top/bottom regions accept text complications. Seconds are suppressed in always-on display (AOD). See the concise [verification record](docs/verification.md) for settings, slot, calendar, and AOD evidence.
 
 The face centers a two-line Orbitron MEDIUM clock, leaves clear wide text regions above and below, and uses small circular left/right complications. It contains no phone bridge, foreground service, exact alarm, notification sentinel, or combined-battery behavior.
 
