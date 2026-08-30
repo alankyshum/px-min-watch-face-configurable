@@ -1,7 +1,37 @@
-plugins { id("com.android.application") }
+import com.android.build.gradle.internal.tasks.factory.dependsOn
+
+plugins {
+    id("com.android.application")
+}
+
 android {
-    namespace = "dev.alanshum.configurableminimal"
-    compileSdk = 34
-    defaultConfig { applicationId = "dev.alanshum.configurableminimal"; minSdk = 34; targetSdk = 34; versionCode = 1; versionName = "1.0.0" }
-    buildTypes { release { isMinifyEnabled = true; isShrinkResources = false; signingConfig = signingConfigs.getByName("debug") } }
+    namespace = "com.alanshum.pixelminimal.longtext"
+    compileSdk = 35
+
+    defaultConfig {
+        applicationId = "com.alanshum.pixelminimal.longtext"
+        minSdk = 34
+        targetSdk = 34
+        versionCode = 10000009
+        versionName = "1.0.9"
+
+        manifestPlaceholders["publisher"] = "Alan Shum (Local Personal Use)"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
+            /** We are not using isDebuggable flag as it is not possible to debug Watch Face Format package.
+             * Instead, we debug com.samsung.wear.watchface.runtime (Galaxy Watches) and/or
+             * com.google.wear.watchface.runtime (Pixel Watches)
+             */
+            isDebuggable = false
+        }
+    }
 }

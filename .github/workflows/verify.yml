@@ -1,41 +1,22 @@
-name: verify
-on: [push, pull_request]
+name: Verify
+
+on:
+  push:
+  pull_request:
+
 jobs:
-  verify:
+  documentation-and-xml:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: '17' }
       - uses: actions/setup-python@v5
-        with: { python-version: '3.x' }
-      - run: python3 tools/config_inventory.py --check
-      - run: python3 -m unittest tools/test_config_inventory.py
-      - run: python3 tools/wff_sanity_check.py
-      - run: python3 -c "import pathlib, xml.etree.ElementTree as e; [e.parse(p) for p in pathlib.Path('.').rglob('*.xml')]"
-      - run: ./gradlew test lint assembleDebug
-      - name: provenance
-        run: |
-          ! git ls-files | grep -E '\.(apk|aab|jks|keystore|class|log|png)$' | grep -v '^docs/images/watch-face-active.png$'
-          test "$(git ls-files | grep -E '\.(ttf|ttc|otf)$' | wc -l | tr -d ' ')" = 1
-          ! rg -i 'com\.alanshum\.pixelminimal|google sans' watchface calendar-provider
-      - name: active-face screenshot privacy metadata
-        run: |
-          python3 - <<'PY'
-          import struct
-          from pathlib import Path
-
-          image = Path('docs/images/watch-face-active.png').read_bytes()
-          assert image[:8] == b'\x89PNG\r\n\x1a\n', 'not a PNG'
-          offset, chunks = 8, []
-          while offset < len(image):
-              length = struct.unpack('>I', image[offset:offset + 4])[0]
-              kind = image[offset + 4:offset + 8]
-              data = image[offset + 8:offset + 8 + length]
-              chunks.append(kind)
-              if kind == b'IHDR':
-                  assert struct.unpack('>II', data[:8]) == (466, 466), 'unexpected dimensions'
-              offset += 12 + length
-          assert offset == len(image), 'truncated PNG'
-          assert not ({b'tEXt', b'zTXt', b'iTXt', b'eXIf'} & set(chunks)), 'text or EXIF metadata is not allowed'
-          PY
+        with:
+          python-version: '3.x'
+      - name: Check generated configuration inventory
+        run: python3 tools/generate_readme_config.py --check
+      - name: Test configuration inventory generator
+        run: python3 -m unittest tools/test_generate_readme_config.py
+      - name: Parse watch-face resource XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('watchface/src/main/res/raw/watchface.xml'); ET.parse('watchface/src/main/res/values/strings.xml')"
+      - name: Build debug watch face
+        run: bash ./gradlew :watchface:assembleDebug

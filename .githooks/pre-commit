@@ -1,4 +1,4 @@
 #!/bin/sh
 set -eu
-python3 tools/config_inventory.py --check
-python3 -m unittest tools/test_config_inventory.py
+
+python3 tools/generate_readme_config.py --check

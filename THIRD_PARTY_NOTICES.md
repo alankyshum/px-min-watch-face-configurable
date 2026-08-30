@@ -11,4 +11,9 @@
 * Copyright: Copyright 2018 The Orbitron Project Authors.
 * License: SIL Open Font License 1.1, reproduced verbatim in [`OFL.txt`](OFL.txt).
 
-The face uses Orbitron’s variable-font MEDIUM (weight 500) for the central two-line clock. No Google Sans artifact is included.
+The face uses Orbitron’s variable-font MEDIUM (weight 500) for the center
+clock and all body and complication text. The outlined-AOD schema option is
+retained for configuration compatibility, but now renders the same solid
+Orbitron clock treatment as the solid option. No uncleared font is bundled or
+referenced. This notice applies only to the bundled Orbitron font
+and does not license unrelated upstream files.

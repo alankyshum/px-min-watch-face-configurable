@@ -1,80 +1,82 @@
-# Configurable Minimal Watch Face
+# Pixel Minimal Long Text (Local)
 
-An original resource-only Wear OS Watch Face Format (WFF) v2 face for API 34, plus a small on-watch calendar-progress complication provider. Version **1.0.0**; package **`dev.alanshum.configurableminimal`**.
+This is a configurable derivative of an upstream WFF2 watch face for Wear OS 5+. It is source-available for personal use and GitHub forking under the written upstream permission recorded in [UPSTREAM_PERMISSION.md](UPSTREAM_PERMISSION.md).
 
-![Active Configurable Minimal face on OPWWE251](docs/images/watch-face-active.png)
+## Current layout and assignments
 
-*Real, clean-room capture of the active face on OPWWE251. The capture contains only the face surface (no phone UI, picker, notifications, calendar-event titles, identifiers, or annotations). It was captured afresh to confirm the active surface; it is not a simulated render or an OEM companion screenshot.*
+- **Center:** large digital clock.
+- **Top (slot 2):** the third-party [Phone Battery Complication](https://play.google.com/store/apps/details?id=com.weartools.phonebattcomp) Event Timer complication. Its event/title and time-until or remaining information are supplied by that provider.
+- **Bottom (slot 3):** a Calendar Pro `LONG_TEXT` next-event complication. In the observed setup it supplies next-event text with time/remaining information; the face displays the provider's text and title and does not guarantee separate start and end times.
+- **Left (slot 0):** system **Day & Date** `SHORT_TEXT`, customized to omit the provider icon and show centered `date/month` and weekday lines.
+- **Right (slot 1):** timer/countdown complication.
 
-## OnePlus / OHealth setup and editing
+Slots remain configurable in the Wear OS complication editor. Phone Battery Complication and Calendar Pro are third-party apps and are **not bundled** here. The optional `phone-companion`, `watch-provider`, and `shared-protocol` modules are local bridge modules; they are separate from both third-party providers and are not required for the assignments above. See [LOCAL_ARCHITECTURE.md](LOCAL_ARCHITECTURE.md) for their local-only design.
 
-On the watch, long-press the active face and choose **Customize**, or open the watch-face picker, choose **Add**, then choose **Configurable Minimal**. These are the verified editing and discovery paths for the public WFF2 package.
+## Build and personal use
 
-On the tested OnePlus/OHealth pairing, the OHealth phone companion does **not** remotely edit third-party standard WFF2 schemas; its phone-side editor is for proprietary OEM faces. Configure this face from the watch-side, platform-managed watch-face controls instead. The verified active package is `dev.alanshum.configurableminimal`, hosted by `com.google.wear.watchface.runtime/.DeclarativeWatchFaceRuntime0` as instance `wfId-66`.
+1. Open the project in Android Studio with an installed Wear OS SDK, or run `bash ./gradlew :watchface:assembleDebug`.
+2. Install the resulting debug APK to a compatible Wear OS 5+ watch using Android Studio or `adb` for your own personal use.
+3. Select **Pixel Minimal Long Text (Local)** and set the four complication slots in the watch/phone complication editor. Install and configure the third-party provider apps separately if you use them.
+4. For the optional local bridge, build/install its phone and watch debug APKs on their respective devices; its current signing/deployment constraints are documented in [LOCAL_ARCHITECTURE.md](LOCAL_ARCHITECTURE.md).
 
-Hands-on verification exercised and confirmed persistence for all six settings—`clockColor`, `accentColor`, `aodStyle`, `seconds`, `topTextSize`, and `bottomTextSize`—and all four flavors. The four verified slots are Day & Date (left), Calendar progress (right), Top text, and Bottom text. The face uses an Orbitron clock; the left side is text-only Day & Date; the right side is a calendar-progress ring; and the top/bottom regions accept text complications. Seconds are suppressed in always-on display (AOD). See the concise [verification record](docs/verification.md) for settings, slot, calendar, and AOD evidence.
+This checkout has no release signing setup. Compiled APKs are not distributed by this repository.
 
-The face centers a two-line Orbitron MEDIUM clock, leaves clear wide text regions above and below, and uses small circular left/right complications. It contains no phone bridge, foreground service, exact alarm, notification sentinel, or combined-battery behavior.
+## Configuration inventory
 
-<!-- CONFIG-INVENTORY:START -->
-### Generated configuration inventory
+This section is generated from `watchface.xml` and `strings.xml`. Do not edit it manually: run `python3 tools/generate_readme_config.py` after changing watch-face configuration resources. CI and the repository hook use `--check` to reject stale content.
 
-**Flavors:** `daily` (Daily), `focus` (Focus), `signal` (Signal), `quiet` (Quiet)
+<!-- BEGIN GENERATED CONFIGURATION INVENTORY -->
 
-| Configuration | Label | Default | Options |
-| --- | --- | --- | --- |
-| `clockColor` | Clock color | `aurora` | `aurora`, `ice`, `coral`, `violet`, `lime`, `amber`, `rose`, `mist` |
-| `accentColor` | Accent color | `aurora` | `aurora`, `ice`, `coral`, `violet`, `lime`, `amber`, `rose`, `mist` |
-| `aodStyle` | Always-on style | `dimmed` | `dimmed`, `timeOnly`, `large` |
-| `seconds` | Seconds indicator | `FALSE` | `TRUE`, `FALSE` |
-| `topTextSize` | Top text size | `22` | `18`, `22`, `26` |
-| `bottomTextSize` | Bottom text size | `22` | `18`, `22`, `26` |
+### User configurations
 
-| Slot | Name | Types |
+| ID | Label | Type | Default | Options |
+| --- | --- | --- | --- | --- |
+| `themeColor` | Material Theme | color | `72` | `0` Graphite; `1` Cloud; `2` Almond; `3` Watermelon; `4` Pomelo; `5` Champagne; `6` Wheat; `7` Limoncello; `8` Key Lime; `9` Lemongrass; `10` Spring; `11` Lime; `12` Pear; `13` Grass Green; `14` Proto Green; `15` Moss Green; `16` Fern; `17` Spearmint; `72` Alpine Green; `18` Mint; `19` Jade; `20` Steam Green; `21` Sage; `22` Avocado; `23` Forest; `71` Pine Green; `24` Seafoam; `25` Stream; `26` Aqua; `27` Lagoon; `29` Sky; `30` Ocean; `31` Sapphire; `32` Royal Blue; `33` Arctic; `34` Icy Blue; `35` Amethyst; `36` Lilac; `38` Lavender; `39` Flamingo; `40` Verbena; `41` Guava; `42` Coral; `43` Peach; `44` Orange; `45` Chai; `46` Honey; `47` Melon; `48` Dandelion; `49` Milkshake; `50` Sand; `51` Salmon; `52` Amber; `54` Charcoal; `55` Ocean Research; `56` Nothing; `57` Submarine; `58` Proto Blue; `59` Khaki; `60` Olive Vibrant; `61` Olive Dull; `62` Candy; `63` United 24; `64` Iridescent; `65` Industrial; `66` Green Shock; `67` Juniper Haze; `68` Neon Green; `69` Neon Lime |
+| `timeColor` | Digital Clock Color | color | `71` | `100` White; `0` Graphite; `1` Cloud; `2` Almond; `3` Watermelon; `4` Pomelo; `5` Champagne; `6` Wheat; `7` Limoncello; `8` Key Lime; `9` Lemongrass; `10` Spring; `11` Lime; `12` Pear; `62` Grass Green; `63` Proto Green; `13` Moss Green; `14` Fern; `15` Spearmint; `16` Mint; `17` Jade; `72` Alpine Green; `18` Steam Green; `19` Sage; `20` Avocado; `21` Forest; `71` Pine Green; `22` Seafoam; `23` Stream; `24` Aqua; `25` Lagoon; `26` Sunset; `27` Sky; `28` Ocean; `29` Sapphire; `30` Royal Blue; `31` Arctic; `32` Icy Blue; `33` Amethyst; `34` Lilac; `35` Macaron; `36` Lavender; `37` Flamingo; `38` Verbena; `39` Guava; `40` Coral; `41` Peach; `42` Chai; `43` Honey; `44` Melon; `45` Dandelion; `46` Milkshake; `47` Sand; `48` Salmon; `49` Amber; `50` Creamsicle; `51` Mustard; `52` Charcoal; `53` Radar; `54` Cyborg; `55` Sealab; `56` Voltage; `57` Ocean Research; `58` Nothing; `59` Thermal; `60` Submarine; `61` Proto Blue; `64` Khaki; `65` Industrial; `66` Green Shock; `67` Juniper Haze; `68` Neon Green; `69` Neon Lime; `70` Neon Orange |
+| `aod` | AOD Style | list | `0` | `0` Dimmed; `1` Time Only; `2` Time Only ++ |
+| `hollowAOD` | AOD Clock | list | `0` | `0` Solid; `1` Outlined |
+| `topComplicationFontSize` | Top complication font size | list | `22` | `18` Small; `22` Medium; `26` Large |
+| `bottomComplicationFontSize` | Bottom complication font size | list | `22` | `18` Small; `22` Medium; `26` Large |
+| `secIndicator` | Seconds Indicator | boolean | `FALSE` | `FALSE` Off; `TRUE` On |
+
+### Complication slots
+
+| Slot | Label | Bounds | Supported types | Default policy |
+| --- | --- | --- | --- | --- |
+| `0` | Left Circle Slot | 130 × 130 at 5,160 | `RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY` | `defaultSystemProvider`=DAY_AND_DATE, `defaultSystemProviderType`=SHORT_TEXT |
+| `1` | Right Circle Slot | 130 × 130 at 315,160 | `RANGED_VALUE SHORT_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY` | `defaultSystemProvider`=TIMER, `defaultSystemProviderType`=SHORT_TEXT |
+| `2` | Top Box Slot | 402 × 112 at 24,0 | `SHORT_TEXT LONG_TEXT EMPTY` | `defaultSystemProvider`=DAY_AND_DATE, `defaultSystemProviderType`=SHORT_TEXT, `primaryProvider`=com.weartools.phonebattcomp/com.weartools.phonebattcomp.complication.MobileBatteryComplicationService, `primaryProviderType`=SHORT_TEXT |
+| `3` | Bottom Box Slot | 256 × 46 at 97,355 | `SHORT_TEXT LONG_TEXT EMPTY` | `defaultSystemProvider`=DAY_AND_DATE, `defaultSystemProviderType`=SHORT_TEXT |
+
+### Flavors
+
+| ID | Label | Assignments |
 | --- | --- | --- |
-| 0 | Day and date | `SHORT_TEXT EMPTY` |
-| 1 | Calendar progress | `RANGED_VALUE SHORT_TEXT LONG_TEXT EMPTY` |
-| 2 | Top text | `SHORT_TEXT LONG_TEXT EMPTY` |
-| 3 | Bottom text | `SHORT_TEXT LONG_TEXT EMPTY` |
-<!-- CONFIG-INVENTORY:END -->
+| `0` | 1st flavor | `themeColor`=`72`, `timeColor`=`71` |
+| `1` | 2nd flavor | `themeColor`=`17`, `timeColor`=`26`, `secIndicator`=`TRUE` |
+| `2` | 3rd flavor | `themeColor`=`65`, `timeColor`=`0`, `secIndicator`=`TRUE` |
+| `3` | 4th flavor | `themeColor`=`64`, `timeColor`=`70` |
+| `4` | 5th flavor | `themeColor`=`60`, `timeColor`=`72` |
+| `5` | 6th flavor | `themeColor`=`36`, `timeColor`=`35`, `secIndicator`=`TRUE` |
 
-## Configuration
+Default flavor: `0`.
+<!-- END GENERATED CONFIGURATION INVENTORY -->
 
-There are eight independently selectable clock and accent colors; four original flavor presets; an optional seconds indicator; and always-on choices **Dimmed**, **Time only**, and **Enlarged time**. Top and bottom text have separate **18**, **22** (default), and **26** controls. Every listed setting has a rendering branch; the inventory generator derives the exact defaults, options, presets, and slots from WFF.
-
-* **Left:** system Day & Date, `SHORT_TEXT`, defaults to two centered text/title lines with no provider icon.
-* **Right:** the included Calendar progress ring is the default: `RANGED_VALUE` first, then `SHORT_TEXT`/`LONG_TEXT` and empty. A neutral full track covers basic/no-data states. The accented 0–12-hour arc decreases with remaining time; its minute-cadenced hand is hidden by an AMBIENT alpha variant.
-* **Top / bottom:** `SHORT_TEXT`, `LONG_TEXT`, or empty. Top uses visual `TextCircular` inside a conservative rectangular editor target; bottom is straight centered text. Both safely render text plus title and expose independent sizes.
-
-## Calendar progress provider
-
-Install the `calendar-provider` APK on the watch, choose **Calendar progress ring** for the right slot, then open its setup entry and approve calendar permission. It queries synchronized watch calendar data through `CalendarContract.Instances` on the watch only; no phone APK or phone-side companion is needed for the calendar ring.
-
-Selection is deterministic: a current event wins; overlapping current events select earliest end then stable event ID; otherwise the nearest future start then stable ID. All-day, cancelled, and declined entries are excluded. A current event reports remaining time; a future event reports time until start. Both use a 0–12-hour range and values above 12 hours display as a full ring. No qualifying event or missing permission returns no-data so the face retains a neutral fallback ring. The text/title convention is `NOW` / `NEXT`, rather than an unreliable visual dimming distinction.
-
-The platform treats provider update periods as advisory. This provider asks for at-most-minute requests and bounds normal data to a minute/event boundary; it does not schedule alarms or keep a service alive, so updates can be delayed by system scheduling or ambient mode.
-
-## Suggested layout (third-party apps are not bundled)
-
-* Top: optional **Phone Battery Complication Event Timer** as a text provider if it provides the desired event/time-until/remaining text.
-* Bottom: optional **Calendar Pro** `LONG_TEXT` next-event output as a text provider.
-* Left: system **Day & Date**.
-* Right: included **Calendar progress ring**.
-
-These are optional user-configurable text choices, not bundled defaults. They do not replace the numeric `RANGED_VALUE` provider in the right ring unless a provider demonstrably emits ranged fields. The owned watch-only provider is required for that numeric ring; no phone companion is needed. Calendar Pro start/end-time formatting is provider/version dependent.
-
-## Build and verify
+## Contributor checks
 
 ```sh
-export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
-export ANDROID_HOME=/Users/alanshum/Library/Android/sdk
-python3 tools/config_inventory.py --check
-python3 -m unittest tools/test_config_inventory.py
-python3 tools/wff_sanity_check.py
-./gradlew test lint assembleDebug
-git config core.hooksPath .githooks  # local repository only
+# One-time, repository-local hook setup (does not alter global Git configuration)
+git config core.hooksPath .githooks
+
+# Refresh/check this README's generated inventory
+python3 tools/generate_readme_config.py
+python3 tools/generate_readme_config.py --check
 ```
 
-`OFL.txt` and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) document the bundled official unmodified Orbitron font and its SHA-256.
+The tracked pre-commit hook runs the `--check` command. It is intentionally activated only after the explicit local `core.hooksPath` command above.
 
-`wff_sanity_check.py` provides deterministic structural/reference validation in CI alongside XML parsing and Android's resource build. It is intentionally a supplement rather than a substitute for the official Wear runtime's WFF v2 schema validation.
+## Permission, licensing, and publication status
+
+This repository is **source-available, not OSI open source**. The supplied written upstream permission is quoted verbatim in [UPSTREAM_PERMISSION.md](UPSTREAM_PERMISSION.md). It is interpreted narrowly as permission for public source hosting and GitHub forking for personal use. It does not grant or claim commercial rights, sublicensing, general redistribution, or APK/release distribution. Downstream users should seek clarification from the upstream rights holder for rights beyond that quoted permission. This is practical compliance information, not legal advice.
+
+All four uncleared font files were removed. The bundled unmodified `orbitron_wght.ttf` font is licensed under the SIL Open Font License 1.1; see [OFL.txt](OFL.txt) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). No blanket license applies to the remaining upstream-derived material.
