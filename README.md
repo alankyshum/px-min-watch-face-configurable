@@ -2,7 +2,17 @@
 
 An original resource-only Wear OS Watch Face Format (WFF) v2 face for API 34, plus a small on-watch calendar-progress complication provider. Version **1.0.0**; package **`dev.alanshum.configurableminimal`**.
 
-> Screenshot status: no screenshot is tracked. The target OPWWE251/API-34 watch accepted and activated this public package, and the declarative runtime loaded its four slots. The OEM picker initially showed **“Starting…”**, then loaded its management grid after a scoped System UI restart. This OPlus build exposes editors only for its own watch-face packages, so the public face's editor controls cannot be manually exercised there; its runtime style schema is nevertheless loaded and recorded by the declarative runtime. The OEM UI also does not expose the face surface to `screencap`. No private, third-party, picker, or unrelated launcher capture is substituted.
+![Active Configurable Minimal face on OPWWE251](docs/images/watch-face-active.png)
+
+*Real, clean-room capture of the active face on OPWWE251. The capture contains only the face surface (no phone UI, picker, notifications, calendar-event titles, identifiers, or annotations). It was captured afresh to confirm the active surface; it is not a simulated render or an OEM companion screenshot.*
+
+## OnePlus / OHealth setup and editing
+
+On the watch, open the watch-face picker, choose **Add**, then choose **Configurable Minimal**. This is the verified discovery path for the public WFF2 package.
+
+On the tested OnePlus/OHealth pairing, the OHealth phone companion does **not** remotely edit third-party standard WFF2 schemas; its phone-side editor is for proprietary OEM faces. Configure this face from the watch-side, platform-managed watch-face controls instead. The verified active package is `dev.alanshum.configurableminimal`, hosted by `com.google.wear.watchface.runtime/.DeclarativeWatchFaceRuntime0` as instance `wfId-66`.
+
+The runtime loaded these six setting IDs: `clockColor`, `accentColor`, `aodStyle`, `seconds`, `topTextSize`, and `bottomTextSize`; and these four slots: Day & Date (left), Calendar progress (right), Top text, and Bottom text. The face uses an Orbitron clock; the left side is text-only Day & Date; the right side is a calendar-progress ring; and the top/bottom regions accept text complications. Seconds are suppressed in always-on display (AOD).
 
 The face centers a two-line Orbitron MEDIUM clock, leaves clear wide text regions above and below, and uses small circular left/right complications. It contains no phone bridge, foreground service, exact alarm, notification sentinel, or combined-battery behavior.
 
@@ -38,7 +48,7 @@ There are eight independently selectable clock and accent colors; four original 
 
 ## Calendar progress provider
 
-Install the `calendar-provider` APK, choose **Calendar progress ring** for the right slot, then open its setup entry and approve calendar permission. It queries `CalendarContract.Instances` only on the watch.
+Install the `calendar-provider` APK on the watch, choose **Calendar progress ring** for the right slot, then open its setup entry and approve calendar permission. It queries synchronized watch calendar data through `CalendarContract.Instances` on the watch only; no phone APK or phone-side companion is needed for the calendar ring.
 
 Selection is deterministic: a current event wins; overlapping current events select earliest end then stable event ID; otherwise the nearest future start then stable ID. All-day, cancelled, and declined entries are excluded. A current event reports remaining time; a future event reports time until start. Both use a 0–12-hour range and values above 12 hours display as a full ring. No qualifying event or missing permission returns no-data so the face retains a neutral fallback ring. The text/title convention is `NOW` / `NEXT`, rather than an unreliable visual dimming distinction.
 
@@ -51,7 +61,7 @@ The platform treats provider update periods as advisory. This provider asks for 
 * Left: system **Day & Date**.
 * Right: included **Calendar progress ring**.
 
-These are optional user-configurable text choices, not bundled defaults. The owned watch-only provider is required for the numeric right ring; no phone companion is needed. Calendar Pro start/end-time formatting is provider/version dependent.
+These are optional user-configurable text choices, not bundled defaults. They do not replace the numeric `RANGED_VALUE` provider in the right ring unless a provider demonstrably emits ranged fields. The owned watch-only provider is required for that numeric ring; no phone companion is needed. Calendar Pro start/end-time formatting is provider/version dependent.
 
 ## Build and verify
 

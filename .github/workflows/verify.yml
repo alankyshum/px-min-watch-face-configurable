@@ -16,6 +16,26 @@ jobs:
       - run: ./gradlew test lint assembleDebug
       - name: provenance
         run: |
-          ! git ls-files | grep -E '\.(apk|aab|jks|keystore|class|log)$'
+          ! git ls-files | grep -E '\.(apk|aab|jks|keystore|class|log|png)$' | grep -v '^docs/images/watch-face-active.png$'
           test "$(git ls-files | grep -E '\.(ttf|ttc|otf)$' | wc -l | tr -d ' ')" = 1
           ! rg -i 'com\.alanshum\.pixelminimal|google sans' watchface calendar-provider
+      - name: active-face screenshot privacy metadata
+        run: |
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+
+          image = Path('docs/images/watch-face-active.png').read_bytes()
+          assert image[:8] == b'\x89PNG\r\n\x1a\n', 'not a PNG'
+          offset, chunks = 8, []
+          while offset < len(image):
+              length = struct.unpack('>I', image[offset:offset + 4])[0]
+              kind = image[offset + 4:offset + 8]
+              data = image[offset + 8:offset + 8 + length]
+              chunks.append(kind)
+              if kind == b'IHDR':
+                  assert struct.unpack('>II', data[:8]) == (466, 466), 'unexpected dimensions'
+              offset += 12 + length
+          assert offset == len(image), 'truncated PNG'
+          assert not ({b'tEXt', b'zTXt', b'iTXt', b'eXIf'} & set(chunks)), 'text or EXIF metadata is not allowed'
+          PY

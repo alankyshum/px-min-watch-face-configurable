@@ -13,3 +13,4 @@ evidence/
 *.png
 !docs/*.png
 !docs/assets/*.png
+!docs/images/*.png
