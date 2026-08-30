@@ -2,7 +2,7 @@
 
 An original resource-only Wear OS Watch Face Format (WFF) v2 face for API 34, plus a small on-watch calendar-progress complication provider. Version **1.0.0**; package **`dev.alanshum.configurableminimal`**.
 
-> Screenshot status: no screenshot is tracked. The target OPWWE251/API-34 watch accepted and activated this public package, and the declarative runtime loaded its four slots; however, the OEM picker/editor stays at **“Starting…”** and the OEM UI does not expose the face surface to `screencap`. No private, third-party, picker, or unrelated launcher capture is substituted.
+> Screenshot status: no screenshot is tracked. The target OPWWE251/API-34 watch accepted and activated this public package, and the declarative runtime loaded its four slots. The OEM picker initially showed **“Starting…”**, then loaded its management grid after a scoped System UI restart. This OPlus build exposes editors only for its own watch-face packages, so the public face's editor controls cannot be manually exercised there; its runtime style schema is nevertheless loaded and recorded by the declarative runtime. The OEM UI also does not expose the face surface to `screencap`. No private, third-party, picker, or unrelated launcher capture is substituted.
 
 The face centers a two-line Orbitron MEDIUM clock, leaves clear wide text regions above and below, and uses small circular left/right complications. It contains no phone bridge, foreground service, exact alarm, notification sentinel, or combined-battery behavior.
 
