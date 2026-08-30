@@ -11,4 +11,5 @@ __pycache__/
 device-logs/
 evidence/
 *.png
+!docs/*.png
 !docs/assets/*.png

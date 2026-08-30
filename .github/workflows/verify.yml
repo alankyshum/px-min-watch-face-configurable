@@ -11,6 +11,7 @@ jobs:
         with: { python-version: '3.x' }
       - run: python3 tools/config_inventory.py --check
       - run: python3 -m unittest tools/test_config_inventory.py
+      - run: python3 tools/wff_sanity_check.py
       - run: python3 -c "import pathlib, xml.etree.ElementTree as e; [e.parse(p) for p in pathlib.Path('.').rglob('*.xml')]"
       - run: ./gradlew test lint assembleDebug
       - name: provenance

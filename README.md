@@ -2,7 +2,7 @@
 
 An original resource-only Wear OS Watch Face Format (WFF) v2 face for API 34, plus a small on-watch calendar-progress complication provider. Version **1.0.0**; package **`dev.alanshum.configurableminimal`**.
 
-> Screenshot status: no screenshot is tracked yet. The clean-room APK was installed on the target API-34 watch, but its OEM picker remained at “Starting…” rather than presenting a selectable face. No private or third-party screenshot is substituted. This is documented as a deployment verification blocker below.
+> Screenshot status: no screenshot is tracked. The target OPWWE251/API-34 watch accepted and activated this public package, and the declarative runtime loaded its four slots; however, the OEM picker/editor stays at **“Starting…”** and the OEM UI does not expose the face surface to `screencap`. No private, third-party, picker, or unrelated launcher capture is substituted.
 
 The face centers a two-line Orbitron MEDIUM clock, leaves clear wide text regions above and below, and uses small circular left/right complications. It contains no phone bridge, foreground service, exact alarm, notification sentinel, or combined-battery behavior.
 
@@ -10,6 +10,15 @@ The face centers a two-line Orbitron MEDIUM clock, leaves clear wide text region
 ### Generated configuration inventory
 
 **Flavors:** `daily` (Daily), `focus` (Focus), `signal` (Signal), `quiet` (Quiet)
+
+| Configuration | Label | Default | Options |
+| --- | --- | --- | --- |
+| `clockColor` | Clock color | `aurora` | `aurora`, `ice`, `coral`, `violet`, `lime`, `amber`, `rose`, `mist` |
+| `accentColor` | Accent color | `aurora` | `aurora`, `ice`, `coral`, `violet`, `lime`, `amber`, `rose`, `mist` |
+| `aodStyle` | Always-on style | `dimmed` | `dimmed`, `timeOnly`, `large` |
+| `seconds` | Seconds indicator | `FALSE` | `TRUE`, `FALSE` |
+| `topTextSize` | Top text size | `22` | `18`, `22`, `26` |
+| `bottomTextSize` | Bottom text size | `22` | `18`, `22`, `26` |
 
 | Slot | Name | Types |
 | --- | --- | --- |
@@ -21,11 +30,11 @@ The face centers a two-line Orbitron MEDIUM clock, leaves clear wide text region
 
 ## Configuration
 
-There are eight independently selectable clock and accent colors; four original flavor presets; an optional seconds indicator; and always-on choices **Dimmed**, **Time only**, and **Enlarged time**. The top/bottom size control exposes **18**, **22** (default), and **26**. The current WFF layout uses 22 as its baseline wide-text rendering; the inventory generator ensures the options and presets remain documented.
+There are eight independently selectable clock and accent colors; four original flavor presets; an optional seconds indicator; and always-on choices **Dimmed**, **Time only**, and **Enlarged time**. Top and bottom text have separate **18**, **22** (default), and **26** controls. Every listed setting has a rendering branch; the inventory generator derives the exact defaults, options, presets, and slots from WFF.
 
-* **Left circle:** system Day & Date, `SHORT_TEXT`, defaulted to text-only and centered. It deliberately does not render a complication icon.
-* **Right circle:** `RANGED_VALUE` first, then `SHORT_TEXT`/`LONG_TEXT`. A neutral full track is used for no data/basic types. For a ranged value the accented arc maps 0–12 hours and shrinks toward zero. Its arrow/hand is hidden by an AMBIENT alpha variant.
-* **Top wide/curved and bottom wide:** `SHORT_TEXT`, `LONG_TEXT`, or empty, rendered as text plus title. The 360-pixel top width has room for a compact `xx:xx–yy:yy TITLE` provider value at the default size; providers ultimately control their own text length.
+* **Left:** system Day & Date, `SHORT_TEXT`, defaults to two centered text/title lines with no provider icon.
+* **Right:** the included Calendar progress ring is the default: `RANGED_VALUE` first, then `SHORT_TEXT`/`LONG_TEXT` and empty. A neutral full track covers basic/no-data states. The accented 0–12-hour arc decreases with remaining time; its minute-cadenced hand is hidden by an AMBIENT alpha variant.
+* **Top / bottom:** `SHORT_TEXT`, `LONG_TEXT`, or empty. Top uses visual `TextCircular` inside a conservative rectangular editor target; bottom is straight centered text. Both safely render text plus title and expose independent sizes.
 
 ## Calendar progress provider
 
@@ -37,12 +46,12 @@ The platform treats provider update periods as advisory. This provider asks for 
 
 ## Suggested layout (third-party apps are not bundled)
 
-* Top: optional **Phone Battery Complication Event Timer** if it provides the desired event/time-until/remaining text.
-* Bottom: optional **Calendar Pro** `LONG_TEXT` next-event output.
+* Top: optional **Phone Battery Complication Event Timer** as a text provider if it provides the desired event/time-until/remaining text.
+* Bottom: optional **Calendar Pro** `LONG_TEXT` next-event output as a text provider.
 * Left: system **Day & Date**.
 * Right: included **Calendar progress ring**.
 
-These are user-configurable complication choices. Calendar Pro start/end-time formatting is not promised because it is provider/version dependent.
+These are optional user-configurable text choices, not bundled defaults. The owned watch-only provider is required for the numeric right ring; no phone companion is needed. Calendar Pro start/end-time formatting is provider/version dependent.
 
 ## Build and verify
 
@@ -51,8 +60,11 @@ export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 export ANDROID_HOME=/Users/alanshum/Library/Android/sdk
 python3 tools/config_inventory.py --check
 python3 -m unittest tools/test_config_inventory.py
+python3 tools/wff_sanity_check.py
 ./gradlew test lint assembleDebug
 git config core.hooksPath .githooks  # local repository only
 ```
 
 `OFL.txt` and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) document the bundled official unmodified Orbitron font and its SHA-256.
+
+`wff_sanity_check.py` provides deterministic structural/reference validation in CI alongside XML parsing and Android's resource build. It is intentionally a supplement rather than a substitute for the official Wear runtime's WFF v2 schema validation.
